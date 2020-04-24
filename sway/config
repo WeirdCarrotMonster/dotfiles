@@ -1,0 +1,144 @@
+set $mod Mod4
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $term gnome-terminal
+set $menu rofi -show drun
+
+set $lock swaylock --daemonize \
+                   --indicator-radius 200 --indicator-thickness 50 \
+                   --color 212121 --layout-bg-color 212121 --inside-color 212121 \
+                   --ring-color 303f9f --line-uses-inside \
+                   --key-hl-color 009688 --separator-color 009688
+
+output * bg ~/.config/sway/wallpaper.jpg fill
+
+exec swayidle -w \
+    timeout 300 'swaymsg "output * dpms off"' \
+    timeout 10 'if pgrep swaylock; then swaymsg "output * dpms off"; fi' \
+    resume 'swaymsg "output * dpms on"'
+
+
+input type:keyboard {
+    xkb_layout us,ru
+    xkb_options grp:caps_toggle
+}
+
+input 1133:50184:Logitech_USB_Trackball {
+    scroll_button BTN_SIDE
+    scroll_method on_button_down
+}
+
+
+bindsym --to-code {
+    $mod+Return exec $term
+    $mod+Shift+c kill
+    $mod+r exec $menu
+    $mod+Shift+r reload
+    $mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    $mod+l exec $lock
+}
+
+floating_modifier $mod normal
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 10
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 10
+
+
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+bindsym $mod+f fullscreen
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+
+bindsym $mod+a focus parent
+
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
+
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bar {
+    position top
+
+    colors {
+        statusline #ffffff
+        background #323232
+        inactive_workspace #32323200 #32323200 #5c5c5c
+    }
+
+    status_command while ~/.config/sway/scripts/status.sh; do sleep 5; done
+    font pango:DejaVu Sans Mono 10
+}
+
+include @sysconfdir@/sway/config.d/*
+
+hide_edge_borders --i3 both
+
+bindsym $mod+p exec "~/.config/sway/scripts/output-chooser.py"
+bindsym $mod+shift+p exec "~/.config/sway/scripts/output-chooser.py default"
+
+bindsym --release Print exec env GRIM_DEFAULT_DIR=/home/wcm/Изображения/ grim
+bindsym --release Shift+Print exec env GRIM_DEFAULT_DIR=/home/wcm/Изображения/ grim -g \"$(slurp)"
+
+exec "env XDG_CURRENT_DESKTOP=sway /usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr"
+exec "wmname LG3D"
+
+for_window [class="Firefox"] inhibit_idle fullscreen
+for_window [app_id="firefox"] inhibit_idle fullscreen
