@@ -123,7 +123,7 @@ bar {
         inactive_workspace #32323200 #32323200 #5c5c5c
     }
 
-    status_command while ~/.config/sway/scripts/status.sh; do sleep 5; done
+    status_command ~/.config/sway/scripts/status.py
     font pango:DejaVu Sans Mono 10
 }
 
