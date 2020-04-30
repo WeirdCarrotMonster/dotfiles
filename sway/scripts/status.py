@@ -23,25 +23,58 @@ CLOCK_ICON = {
 }
 
 
+def get_sensor_readings():
+    sensor_data_raw = subprocess.check_output(["sensors", "-j"])
+    return json.loads(sensor_data_raw)
+
+
+BASE_READINGS = get_sensor_readings()
+CPU_SENSOR = next(
+    (
+        key
+        for key in BASE_READINGS.keys()
+        if key.startswith("k10temp-pci")
+    ),
+    None
+)
+
+GPU_SENSOR = next(
+    (
+        key
+        for key in BASE_READINGS.keys()
+        if key.startswith("amdgpu-pci")
+    ),
+    None
+)
+
+
 def get_cpu_temp(sensor_data):
-    value = sensor_data["k10temp-pci-00c3"]["Tdie"]["temp1_input"]
+    if not CPU_SENSOR:
+        return 0
+
+    value = sensor_data[CPU_SENSOR]["Tdie"]["temp1_input"]
     return int(value)
 
 
 def get_gpu_temp(sensor_data):
-    value = sensor_data["amdgpu-pci-0600"]["edge"]["temp1_input"]
+    if not GPU_SENSOR:
+        return 0
+
+    value = sensor_data[GPU_SENSOR]["edge"]["temp1_input"]
     return int(value)
 
 
 def get_gpu_fan_percent(sensor_data):
-    gpu_fan_max = sensor_data["amdgpu-pci-0600"]["fan1"]["fan1_max"]
-    gpu_fan_cur = sensor_data["amdgpu-pci-0600"]["fan1"]["fan1_input"]
+    if not GPU_SENSOR:
+        return 0
+
+    gpu_fan_max = sensor_data[GPU_SENSOR]["fan1"]["fan1_max"]
+    gpu_fan_cur = sensor_data[GPU_SENSOR]["fan1"]["fan1_input"]
     return int(100 * gpu_fan_cur / gpu_fan_max)
 
 
 def do_print_line():
-    sensor_data_raw = subprocess.check_output(["sensors", "-j"])
-    sensor_data = json.loads(sensor_data_raw)
+    sensor_data = get_sensor_readings()
 
     cpu_temp = get_cpu_temp(sensor_data)
     gpu_temp = get_gpu_temp(sensor_data)
