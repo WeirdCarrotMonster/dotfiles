@@ -5,7 +5,8 @@ set $down j
 set $up k
 set $right l
 
-set $term gnome-terminal
+#set $term gnome-terminal
+set $term alacritty
 set $menu rofi -show drun
 
 set $lock swaylock --daemonize \
@@ -137,7 +138,7 @@ bindsym $mod+shift+p exec "~/.config/sway/scripts/output-chooser.py default"
 bindsym --release Print exec env GRIM_DEFAULT_DIR=/home/wcm/Изображения/ grim
 bindsym --release Shift+Print exec env GRIM_DEFAULT_DIR=/home/wcm/Изображения/ grim -g \"$(slurp)"
 
-exec "env XDG_CURRENT_DESKTOP=sway /usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr"
+exec "/usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr"
 exec "wmname LG3D"
 
 for_window [class="Firefox"] inhibit_idle fullscreen
