@@ -126,6 +126,7 @@ mode "resize" {
 }
 
 bar {
+    swaybar_command	waybar
     position top
 
     colors {
