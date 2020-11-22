@@ -17,8 +17,10 @@ def get_cmd_output(cmd, **kwargs) -> str:
 
 
 def call_menu_gui(choices, prompt):
+    lines = str(len(choices))
     value = get_cmd_output(
-        ["rofi", "-dmenu", "-p", prompt, "-lines", str(len(choices))],
+        #["rofi", "-dmenu", "-p", prompt, "-lines", lines],
+        ["wofi", "--dmenu", "--prompt", prompt, "--lines", lines, "--cache-file", "/dev/null"],
         input="\n".join(sorted(choices.keys())).encode(),
     )
 
