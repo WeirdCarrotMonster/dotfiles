@@ -41,7 +41,8 @@ bindsym --to-code {
     $mod+Shift+c kill
     $mod+r exec $menu
     $mod+Shift+r reload
-    $mod+Shift+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    $mod+q exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    $mod+Shift+q exec "~/.config/sway/scripts/sway-quit.fish default"
     $mod+l exec $lock
 }
 
@@ -142,6 +143,7 @@ bindsym --release Shift+Print exec env GRIM_DEFAULT_DIR=/home/wcm/Изображ
 
 exec "/usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr"
 exec "wmname LG3D"
+exec "lxqt-policykit-agent"
 
 for_window [class="Firefox"] inhibit_idle fullscreen
 for_window [app_id="firefox"] inhibit_idle fullscreen
