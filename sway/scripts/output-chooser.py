@@ -59,18 +59,6 @@ def line_to_prop(line):
     return key, value.strip('"')
 
 
-def line_is_prop(line):
-    splitted = PROP_RE.split(line)
-
-    return len(splitted) == 2
-
-
-def line_to_keyval(line):
-    key, value = PROP_RE.split(line)
-
-    return key, value.strip('"')
-
-
 def pacmd_to_props(output, separator):
     result = []
 
