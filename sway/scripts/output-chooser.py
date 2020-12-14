@@ -44,8 +44,7 @@ def call_menu_gui(choices, prompt):
 def node_walk(nodes):
     for node in nodes:
         yield node
-        for subnode in node_walk(node.get("nodes") or []):
-            yield subnode
+        yield from node_walk(node.get("nodes") or [])
 
 
 def line_to_prop(line):
@@ -63,15 +62,11 @@ def pacmd_to_props(output, separator):
     result = []
 
     for group in filter(None, output.split(separator)):
-        lines = (line.strip() for line in group.strip().splitlines())
-        index_line = next(lines)
+        lines = (line.strip() for line in group.splitlines())
 
-        props = dict(
-            INDEX=index_line.strip(),
-            **{key: value for key, value in filter(None, map(line_to_prop, lines))},
+        result.append(
+            dict([("INDEX", next(lines)), *filter(None, map(line_to_prop, lines))])
         )
-
-        result.append(props)
 
     return result
 
@@ -92,12 +87,11 @@ def get_matching_inputs_for_pid(pid):
         get_cmd_output(["pactl", "list", "sink-inputs"]), "Sink Input #"
     )
 
-    return list(
-        filter(
-            lambda sink_input: sink_input.get("application.process.id") == str(pid),
-            all_inputs,
-        )
-    )
+    return [
+        sink_input
+        for sink_input in all_inputs
+        if sink_input.get("application.process.id") == str(pid)
+    ]
 
 
 def get_all_sinks():
