@@ -105,8 +105,9 @@ matching_inputs = None
 
 if "default" not in sys.argv[1:]:
     if current_node := get_current_node():
-        if matching_inputs := get_matching_inputs_for_pid(current_node["pid"]):
-            select_for = current_node["name"]
+        if "pid" in current_node:
+            if matching_inputs := get_matching_inputs_for_pid(current_node["pid"]):
+                select_for = current_node["name"]
 
 
 if chosen_sink_id := call_menu_gui(choices=get_all_sinks(), prompt=select_for):
