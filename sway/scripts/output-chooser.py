@@ -97,7 +97,7 @@ def get_matching_inputs_for_pid(pid):
 def get_all_sinks():
     sinks = pacmd_to_props(get_cmd_output(["pactl", "list", "sinks"]), "Sink #")
 
-    return {sink["node.description"]: sink["Name"] for sink in sinks}
+    return {sink["Description"]: sink["Name"] for sink in sinks}
 
 
 select_for = "Default sink"
