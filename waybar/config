@@ -2,7 +2,27 @@
     "height": 24,
     "modules-left": ["sway/workspaces"],
     "modules-center": ["sway/window"],
-    "modules-right": ["idle_inhibitor", "pulseaudio", "network", "temperature", "tray", "clock"],
+    "modules-right": ["custom/screenshare", "idle_inhibitor", "pulseaudio", "tray", "clock"],
+    "sway/workspaces": {
+        "disable-scroll-wraparound": true,
+        "enable-bar-scroll": true,
+        "persistent_workspaces": {
+            "1": [],
+            "2": [],
+            "3": [],
+            "4": [],
+            "5": [],
+            "6": [],
+            "7": [],
+            "8": []
+        }
+    },
+    "custom/screenshare": {
+        "exec-if": "pgrep wf-recorder",
+        "interval": 1,
+        "exec": "echo -e \"RECORDING\n\nblinking-red\"",
+        "class": "blinking-red"
+    },
     "idle_inhibitor": {
         "format": "{icon}",
         "format-icons": {
@@ -16,21 +36,6 @@
     "clock": {
         "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
         "format-alt": "{:%Y-%m-%d}"
-    },
-    "temperature": {
-        // "thermal-zone": 2,
-        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
-        "critical-threshold": 80,
-        // "format-critical": "{temperatureC}°C {icon}",
-        "format": "{temperatureC}°C {icon}",
-        "format-icons": ["", "", ""]
-    },
-    "network": {
-        "format-wifi": "{essid} ({signalStrength}%) ",
-        "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "format-alt": "{ifname}: {ipaddr}/{cidr}"
     },
     "pulseaudio": {
         // "scroll-step": 1, // %, can be a float
