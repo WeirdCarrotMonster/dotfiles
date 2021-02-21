@@ -73,12 +73,25 @@ def pacmd_to_props(output, separator):
 
 def get_current_node():
     import json
+    import socket
 
-    sway_tree_parsed = json.loads(
-        get_cmd_output(["/usr/bin/swaymsg", "-t", "get_tree"])
-    )
+    swaysock = os.environ["SWAYSOCK"]
+    with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as sock:
+        sock.connect(swaysock)
 
+        # Pre-formatted i3-ipc GET_TREE request
+        sock.sendall(b"i3-ipc\x00\x00\x00\x00\x04\x00\x00\x00")
+
+        header_response = sock.recv(14)
+
+        # As in _, response_size, _ = struct.unpack("=6sII", data)
+        response_size = int.from_bytes(header_response[6:10], "little")
+
+        response = sock.recv(response_size)
+
+    sway_tree_parsed = json.loads(response)
     nodes = sway_tree_parsed.get("nodes") or []
+
     return next((_ for _ in node_walk(nodes) if _.get("focused")), None)
 
 
