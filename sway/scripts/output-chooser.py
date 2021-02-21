@@ -94,6 +94,18 @@ def get_matching_inputs_for_pid(pid):
     ]
 
 
+def get_matching_inputs_for_app(app):
+    all_inputs = pacmd_to_props(
+        get_cmd_output(["pactl", "list", "sink-inputs"]), "Sink Input #"
+    )
+
+    return [
+        sink_input
+        for sink_input in all_inputs
+        if sink_input.get("application.icon_name") == app
+    ]
+
+
 def get_all_sinks():
     sinks = pacmd_to_props(get_cmd_output(["pactl", "list", "sinks"]), "Sink #")
 
@@ -108,6 +120,11 @@ if "default" not in sys.argv[1:]:
         if "pid" in current_node:
             if matching_inputs := get_matching_inputs_for_pid(current_node["pid"]):
                 select_for = current_node["name"]
+
+            if not matching_inputs and "app_id" in current_node:
+                # Probably a flatpak application
+                if matching_inputs := get_matching_inputs_for_app(current_node["app_id"]):
+                    select_for = current_node["name"]
 
 
 if chosen_sink_id := call_menu_gui(choices=get_all_sinks(), prompt=select_for):
