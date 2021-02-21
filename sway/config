@@ -15,6 +15,7 @@ set $lock swaylock --daemonize \
                    --color 212121 --layout-bg-color 212121 --inside-color 212121 \
                    --ring-color 303f9f --line-uses-inside \
                    --key-hl-color 009688 --separator-color 009688
+set $screenshare `$HOME/.config/sway/scripts/toggle-screen-recorder.sh`
 
 output * bg ~/.config/sway/wallpaper.jpg fill
 
@@ -150,6 +151,8 @@ bindsym --release Print exec grim - | swappy -f -
 bindsym --release Shift+Print exec grim -g "$(slurp)" - | swappy -f -
 bindsym --release Ctrl+Shift+Print exec swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp | grim -g - - | swappy -f -
 
+# Screen sharing
+bindsym --to-code $mod+Shift+O exec $screenshare
 exec "/usr/lib/xdg-desktop-portal -r & /usr/lib/xdg-desktop-portal-wlr"
 exec "wmname LG3D"
 exec "lxqt-policykit-agent"
